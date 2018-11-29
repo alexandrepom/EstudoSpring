@@ -13,6 +13,7 @@ import br.com.gonzaga.domain.Cidade;
 import br.com.gonzaga.domain.Cliente;
 import br.com.gonzaga.domain.Endereco;
 import br.com.gonzaga.domain.Estado;
+import br.com.gonzaga.domain.ItemPedido;
 import br.com.gonzaga.domain.Pagamento;
 import br.com.gonzaga.domain.PagamentoComBoleto;
 import br.com.gonzaga.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import br.com.gonzaga.repositories.CidadeRepository;
 import br.com.gonzaga.repositories.ClienteRepository;
 import br.com.gonzaga.repositories.EnderecoRepository;
 import br.com.gonzaga.repositories.EstadoRepository;
+import br.com.gonzaga.repositories.ItemPedidoRepository;
 import br.com.gonzaga.repositories.PagamentoRepository;
 import br.com.gonzaga.repositories.PedidoRepository;
 import br.com.gonzaga.repositories.ProdutoRepository;
@@ -40,6 +42,7 @@ public class EstudoSpringApplication implements CommandLineRunner{
 	@Autowired ClienteRepository clienteRepository;
 	@Autowired PagamentoRepository pagamentoRepository;
 	@Autowired PedidoRepository pedidoRepository;
+	@Autowired ItemPedidoRepository itemPedidoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(EstudoSpringApplication.class, args);
@@ -105,6 +108,19 @@ public class EstudoSpringApplication implements CommandLineRunner{
 		
 		pedidoRepository.saveAll(Arrays.asList(ped1,ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1,pagto2));
+		
+		 ItemPedido ip1 = new ItemPedido(ped1, p1, 0.0, 1, 2000.0);
+		 ItemPedido ip2 = new ItemPedido(ped1, p3, 0.0, 2, 80.0);
+		 ItemPedido ip3 = new ItemPedido(ped2, p2, 100.0, 1, 800.0);
+		 
+		 ped1.getItens().addAll(Arrays.asList(ip1,ip2));
+		 ped2.getItens().addAll(Arrays.asList(ip3));
+		 
+		 p1.getItens().addAll(Arrays.asList(ip1));
+		 p2.getItens().addAll(Arrays.asList(ip3));
+		 p3.getItens().addAll(Arrays.asList(ip2));
+		 
+		 itemPedidoRepository.saveAll(Arrays.asList(ip1,ip2,ip3));
 		
 		
 	}
