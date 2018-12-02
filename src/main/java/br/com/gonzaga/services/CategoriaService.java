@@ -22,7 +22,7 @@ public class CategoriaService {
 	 * @throws ObjectNotFoundException 
 	 */
 	 
-	public Categoria buscar(Integer id) throws ObjectNotFoundException {
+	public Categoria find(Integer id) throws ObjectNotFoundException {
 		Optional<Categoria> obj = repo.findById(id);
 		
 		return obj.orElseThrow(
@@ -33,5 +33,11 @@ public class CategoriaService {
 		obj.setId(null);
 		return repo.save(obj);		
 	}
+
+	public Categoria update(Categoria obj) {
+		find(obj.getId());
+		return repo.save(obj);
+	}
+	
 
 }

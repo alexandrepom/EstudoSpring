@@ -38,7 +38,7 @@ public class PedidoResource {
 	 * REST. a ? é usada para deixar o retorno de qualquer tipo pois não se sabe se o tipo
 	 * buscado será encontrado ou não*/
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
-	public ResponseEntity<?> find(@PathVariable Integer id){
+	public ResponseEntity<Pedido> find(@PathVariable Integer id){
 		Pedido obj = service.buscar(id);
 		return ResponseEntity.ok().body(obj);
 		
