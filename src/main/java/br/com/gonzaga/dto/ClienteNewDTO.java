@@ -2,20 +2,35 @@ package br.com.gonzaga.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
+import br.com.gonzaga.services.validation.ClienteInsert;
+
+@ClienteInsert
 public class ClienteNewDTO  implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@NotEmpty(message="Informe o nome") @Length(min=2, max=120, message="Tamanho mínimo do nome entre 2 e 120 caracteres")
 	private String nome;
+	@Email @NotEmpty(message="Informe o email")
 	private String email;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private String cpfOuCnpj;
-	private Integer tipo;
 	
+	private Integer tipo;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private String logradouro;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private String numero;
 	private String complemento;
 	private String bairro;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private String cep;
 	
+	@NotEmpty(message="Preenchimento obrigatório")
 	private String telefone1;
 	private String telefone2;
 	private String telefone3;
