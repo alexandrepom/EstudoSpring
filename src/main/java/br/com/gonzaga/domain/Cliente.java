@@ -28,7 +28,7 @@ public class Cliente implements Serializable{
 	private String nome;
 	private String email;
 	private String cpfOuCnpj;
-	
+	private Integer tipo;
 	
 	@OneToMany(mappedBy="cliente")
 	private List<Endereco> enderecos = new ArrayList<>();
@@ -38,7 +38,6 @@ public class Cliente implements Serializable{
 	@CollectionTable(name="telefone")
 	private Set<String> telefones = new HashSet<>();
 	
-	private Integer tipo;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy="cliente")
