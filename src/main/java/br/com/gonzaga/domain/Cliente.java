@@ -124,9 +124,9 @@ public class Cliente implements Serializable{
 		this.telefones = telefones;
 	}
 
-	public void setTipo(Integer tipo) {
-		this.tipo = tipo;
-	}
+//	public void setTipo(Integer tipo) {
+//		this.tipo = tipo;
+//	}
 	
 	@Override
 	public int hashCode() {

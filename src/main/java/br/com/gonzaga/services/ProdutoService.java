@@ -23,7 +23,7 @@ public class ProdutoService {
 	@Autowired
 	private CategoriaRepository categoriaRepository;
 	
-	public Produto buscar(Integer id) throws ObjectNotFoundException{
+	public Produto find(Integer id) throws ObjectNotFoundException{
 		Optional<Produto> obj = produtoRepository.findById(id);
 		return obj.orElseThrow(()->new ObjectNotFoundException("Objeto não encontrado. ID: " + id + ", Tipo: "+ Produto.class.getName()));
 	}
@@ -39,5 +39,8 @@ public class ProdutoService {
 		List<Categoria> categorias = categoriaRepository.findAllById(ids) ;
 		return produtoRepository.search(nome, categorias,pageRequest);
 	}
+
+	
+	
 
 }
