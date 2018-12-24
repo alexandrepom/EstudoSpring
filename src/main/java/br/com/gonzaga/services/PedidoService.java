@@ -10,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.gonzaga.domain.ItemPedido;
 import br.com.gonzaga.domain.PagamentoComBoleto;
 import br.com.gonzaga.domain.Pedido;
+import br.com.gonzaga.domain.Produto;
 import br.com.gonzaga.domain.enums.EstadoPagamento;
+import br.com.gonzaga.repositories.ClienteRepository;
 import br.com.gonzaga.repositories.ItemPedidoRepository;
 import br.com.gonzaga.repositories.PagamentoRepository;
 import br.com.gonzaga.repositories.PedidoRepository;
@@ -29,6 +31,8 @@ public class PedidoService {
 	private ProdutoService produtoService;
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
+	@Autowired
+	private ClienteService clienteService;
 	
 	public Pedido find(Integer id) throws ObjectNotFoundException{
 		Optional<Pedido> obj = pedidoRepository.findById(id);
@@ -40,6 +44,8 @@ public class PedidoService {
 	public Pedido insert(Pedido obj) {
 		
 		obj.setId(null);
+		obj.setCliente(clienteService.find(obj.getCliente().getId()));
+		//obj.setCliente(clienteRepository.findById(obj.getCliente().getId()).orElse(null));
 		obj.setInstante(new Date());
 		obj.getPagamento().setEstado(EstadoPagamento.PENDENTE);
 		obj.getPagamento().setPedido(obj);
@@ -55,11 +61,14 @@ public class PedidoService {
 		pagamentoRepository.save(obj.getPagamento());
 		
 		for (ItemPedido ip : obj.getItens()) {
+	
 			ip.setDesconto(0.0);
-			ip.setPreco(produtoService.find(ip.getProduto().getId()).getPreco());
+			ip.setProduto(produtoService.find(ip.getProduto().getId()));
+			ip.setPreco(ip.getProduto().getPreco());
 			ip.setPedido(obj);
 		}
 		itemPedidoRepository.saveAll(obj.getItens());
+		System.out.println(obj);
 		return obj;
 		
 	}
