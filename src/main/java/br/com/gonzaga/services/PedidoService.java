@@ -10,9 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.gonzaga.domain.ItemPedido;
 import br.com.gonzaga.domain.PagamentoComBoleto;
 import br.com.gonzaga.domain.Pedido;
-import br.com.gonzaga.domain.Produto;
 import br.com.gonzaga.domain.enums.EstadoPagamento;
-import br.com.gonzaga.repositories.ClienteRepository;
 import br.com.gonzaga.repositories.ItemPedidoRepository;
 import br.com.gonzaga.repositories.PagamentoRepository;
 import br.com.gonzaga.repositories.PedidoRepository;
@@ -33,6 +31,8 @@ public class PedidoService {
 	private ItemPedidoRepository itemPedidoRepository;
 	@Autowired
 	private ClienteService clienteService;
+	@Autowired
+	private EmailService emailService;
 	
 	public Pedido find(Integer id) throws ObjectNotFoundException{
 		Optional<Pedido> obj = pedidoRepository.findById(id);
@@ -68,7 +68,7 @@ public class PedidoService {
 			ip.setPedido(obj);
 		}
 		itemPedidoRepository.saveAll(obj.getItens());
-		System.out.println(obj);
+		emailService.sendOrderConfirmationEmail(obj);
 		return obj;
 		
 	}

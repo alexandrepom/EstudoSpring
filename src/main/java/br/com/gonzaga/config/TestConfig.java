@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import br.com.gonzaga.services.DBService;
+import br.com.gonzaga.services.EmailService;
+import br.com.gonzaga.services.MockEmailService;
 
 @Configuration
 @Profile("test")
@@ -18,8 +20,13 @@ public class TestConfig {
 	public boolean instantiateDatabase() throws Exception {
 		
 		dbService.instantiateDatabase();
-		
 		return true;
 	}
+	
+	@Bean
+	public EmailService emailService() {
+		return new MockEmailService();
+	}
+	
 
 }
