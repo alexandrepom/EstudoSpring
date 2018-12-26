@@ -21,16 +21,22 @@ public class PedidoService {
 	
 	@Autowired
 	private PedidoRepository pedidoRepository;
+	
 	@Autowired
 	private BoletoService boletoService;
+	
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	
 	@Autowired
 	private ProdutoService produtoService;
+	
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
+	
 	@Autowired
 	private ClienteService clienteService;
+	
 	@Autowired
 	private EmailService emailService;
 	

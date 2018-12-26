@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.gonzaga.domain.Cidade;
@@ -25,6 +26,9 @@ import br.com.gonzaga.services.exception.ObjectNotFoundException;
 
 @Service
 public class ClienteService {
+	
+	@Autowired
+	private BCryptPasswordEncoder bCrypt;
 	
 	@Autowired
 	private ClienteRepository repo;
@@ -67,11 +71,11 @@ public class ClienteService {
 	
 	
 	public Cliente fromDTO(ClienteDTO objDto) {
-		return new Cliente(objDto.getId(),objDto.getNome(), objDto.getEmail(),null,null) ;
+		return new Cliente(objDto.getId(),objDto.getNome(), objDto.getEmail(),null,null,null) ;
 	}
 	
 	public Cliente fromDTO(ClienteNewDTO objDto) {
-		Cliente cli =  new Cliente(null,objDto.getNome(),objDto.getEmail(),objDto.getCpfOuCnpj(),TipoCliente.toEnum(objDto.getTipo()));
+		Cliente cli =  new Cliente(null,objDto.getNome(),objDto.getEmail(),objDto.getCpfOuCnpj(),TipoCliente.toEnum(objDto.getTipo()),bCrypt.encode(objDto.getSenha()));
 		Cidade ci = cityRepo.findById(objDto.getCidadeId()).orElseThrow(()->new ObjectNotFoundException("Objeto não encontrado. ID: " + objDto.getCidadeId() + ", Tipo: "+ Cidade.class.getName()));
 		Endereco end = new Endereco(null, objDto.getLogradouro(), objDto.getNumero(),objDto.getComplemento(),objDto.getBairro(), objDto.getCep(), cli, ci);
 		cli.getEnderecos().add(end);
