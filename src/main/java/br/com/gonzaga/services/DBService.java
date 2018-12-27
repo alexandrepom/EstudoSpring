@@ -19,6 +19,7 @@ import br.com.gonzaga.domain.PagamentoComCartao;
 import br.com.gonzaga.domain.Pedido;
 import br.com.gonzaga.domain.Produto;
 import br.com.gonzaga.domain.enums.EstadoPagamento;
+import br.com.gonzaga.domain.enums.Perfil;
 import br.com.gonzaga.domain.enums.TipoCliente;
 import br.com.gonzaga.repositories.CategoriaRepository;
 import br.com.gonzaga.repositories.CidadeRepository;
@@ -117,8 +118,13 @@ public class DBService {
 		
 		cli1.getEnderecos().addAll(Arrays.asList(e1,e2));
 		
-		clienteRepository.saveAll(Arrays.asList(cli1));
-		enderecoRepository.saveAll(Arrays.asList(e1,e2));
+		Cliente cli2 = new Cliente(null,"Alexandre Gonzaga","alexandre@gmail.com","98471806010", TipoCliente.PESSOA_FISICA,bCripty.encode("123"));
+		cli2.addPerfil(Perfil.ADMIN);
+		cli2.getTelefones().addAll(Arrays.asList("98363334","92868998"));
+		Endereco e3 = new Endereco(null, "Rua Flores", "310", "Apto 303", "Jardim", "38220834", cli2, c1);
+		
+		clienteRepository.saveAll(Arrays.asList(cli1,cli2));
+		enderecoRepository.saveAll(Arrays.asList(e1,e2,e3));
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		
