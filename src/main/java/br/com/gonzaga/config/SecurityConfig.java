@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -28,6 +29,7 @@ import br.com.gonzaga.security.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled=true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
@@ -45,9 +47,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	};
 	
 	private static final String[] PUBLIC_MATCHES_GET = {
-			"/h2-console/**",
 			"/produtos/**",
 			"/categorias/**"
+		};
+	
+	private static final String[] PUBLIC_MATCHES_POST = {
+			"/clientes/**"
 		};
 	
 	
@@ -61,8 +66,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		http.cors().and().csrf().disable();//desabilita a proteção contra ataque csrf
 		http.authorizeRequests()
-			.antMatchers(HttpMethod.GET ,PUBLIC_MATCHES_GET).permitAll()//libera para esses
-			.antMatchers(PUBLIC_MATCHES).permitAll()//libera para esses
+			.antMatchers(HttpMethod.GET ,PUBLIC_MATCHES_GET).permitAll()//libera GET para esses matches
+			.antMatchers(HttpMethod.POST ,PUBLIC_MATCHES_POST).permitAll()//libera POST para esses matches
+			.antMatchers(PUBLIC_MATCHES).permitAll()//libera qualquer método para esses matches
 			.anyRequest().authenticated();//para os demais exige autenticação
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(),jwtUtil)); //filtro de autenticação
 		http.addFilter(new JWTAuthorizationFilter(authenticationManager(),jwtUtil,userDetailsService));//filtro de autorização
