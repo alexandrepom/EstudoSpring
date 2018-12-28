@@ -25,9 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.gonzaga.domain.Categoria;
 import br.com.gonzaga.domain.Pedido;
-import br.com.gonzaga.dto.CategoriaDTO;
 import br.com.gonzaga.services.PedidoService;
 import javassist.tools.rmi.ObjectNotFoundException;
 
