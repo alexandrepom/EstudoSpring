@@ -22,7 +22,7 @@ public class JWTUtil {
 	private String secret;
 	
 	@Value("${jwt.expiration}")
-	private Long expiration ;
+	private Long expiration;
 	
 	public String generateToken(String username) {
 		return Jwts.builder()

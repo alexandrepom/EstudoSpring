@@ -15,12 +15,15 @@ import org.springframework.stereotype.Service;
 import br.com.gonzaga.domain.Cidade;
 import br.com.gonzaga.domain.Cliente;
 import br.com.gonzaga.domain.Endereco;
+import br.com.gonzaga.domain.enums.Perfil;
 import br.com.gonzaga.domain.enums.TipoCliente;
 import br.com.gonzaga.dto.ClienteDTO;
 import br.com.gonzaga.dto.ClienteNewDTO;
 import br.com.gonzaga.repositories.CidadeRepository;
 import br.com.gonzaga.repositories.ClienteRepository;
 import br.com.gonzaga.repositories.EnderecoRepository;
+import br.com.gonzaga.security.UserSS;
+import br.com.gonzaga.services.exception.AuthorizationException;
 import br.com.gonzaga.services.exception.DataIntegrityException;
 import br.com.gonzaga.services.exception.ObjectNotFoundException;
 
@@ -37,7 +40,14 @@ public class ClienteService {
 	@Autowired
 	private EnderecoRepository endRepo;
 	
-	public Cliente find(Integer id) throws ObjectNotFoundException{
+	public Cliente find(Integer id){
+		
+		UserSS user = UserService.authenticated();
+//		if (user==null || !user.hasRole(Perfil.ADMIN)) {
+		if (user==null || (!user.hasRole(Perfil.ADMIN) && !id.equals(user.getId()))) {
+			throw new AuthorizationException("Acesso negado");
+		}
+
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(()->new ObjectNotFoundException("Objeto não encontrado. ID: " + id + ", Tipo: "+ Cliente.class.getName()));
 	}
