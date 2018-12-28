@@ -4,9 +4,13 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.gonzaga.domain.Cliente;
 import br.com.gonzaga.domain.ItemPedido;
 import br.com.gonzaga.domain.PagamentoComBoleto;
 import br.com.gonzaga.domain.Pedido;
@@ -14,31 +18,21 @@ import br.com.gonzaga.domain.enums.EstadoPagamento;
 import br.com.gonzaga.repositories.ItemPedidoRepository;
 import br.com.gonzaga.repositories.PagamentoRepository;
 import br.com.gonzaga.repositories.PedidoRepository;
+import br.com.gonzaga.security.UserSS;
+import br.com.gonzaga.services.exception.AuthorizationException;
 import br.com.gonzaga.services.exception.ObjectNotFoundException;
 
 @Service
 public class PedidoService {
 	
-	@Autowired
-	private PedidoRepository pedidoRepository;
+	@Autowired private PedidoRepository pedidoRepository;	
+	@Autowired private BoletoService boletoService;	
+	@Autowired private PagamentoRepository pagamentoRepository;	
+	@Autowired private ProdutoService produtoService;	
+	@Autowired private ItemPedidoRepository itemPedidoRepository;	
+	@Autowired private ClienteService clienteService;	
+	@Autowired private EmailService emailService;
 	
-	@Autowired
-	private BoletoService boletoService;
-	
-	@Autowired
-	private PagamentoRepository pagamentoRepository;
-	
-	@Autowired
-	private ProdutoService produtoService;
-	
-	@Autowired
-	private ItemPedidoRepository itemPedidoRepository;
-	
-	@Autowired
-	private ClienteService clienteService;
-	
-	@Autowired
-	private EmailService emailService;
 	
 	public Pedido find(Integer id) throws ObjectNotFoundException{
 		Optional<Pedido> obj = pedidoRepository.findById(id);
@@ -76,7 +70,23 @@ public class PedidoService {
 		itemPedidoRepository.saveAll(obj.getItens());
 		emailService.sendOrderConfirmationEmail(obj);
 		return obj;
-		
 	}
+	
+	
+	public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction){
+		
+		UserSS user = UserService.authenticated();
+		
+		if(user==null) {
+			throw new AuthorizationException("Acesso Negado");
+		}
+		
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		
+		Cliente cliente = clienteService.find(user.getId());
+		
+		return pedidoRepository.findByCliente(cliente, pageRequest);
+	}
+	
 
 }
