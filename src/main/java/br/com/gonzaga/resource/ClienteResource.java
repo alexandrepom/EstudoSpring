@@ -22,6 +22,9 @@ import br.com.gonzaga.domain.Cliente;
 import br.com.gonzaga.dto.ClienteDTO;
 import br.com.gonzaga.dto.ClienteNewDTO;
 import br.com.gonzaga.services.ClienteService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController //indica que a classe é um controlador REST
 @RequestMapping(value="/clientes") //indica o endpoint
@@ -30,6 +33,11 @@ public class ClienteResource {
 	@Autowired
 	ClienteService service;
 	
+	@ApiOperation(value="busca o cliente por id")
+	@ApiResponses({
+		@ApiResponse(code=404, message="Código não existe")
+		,@ApiResponse(code=400, message="Código não existe")//separar por vírgula as mensagens
+	})
 	@RequestMapping(value="/{id}",method=RequestMethod.GET)
 	public ResponseEntity<Cliente> find(@PathVariable Integer id){
 		Cliente cliente = service.find(id);
